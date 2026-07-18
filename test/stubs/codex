@@ -3,6 +3,7 @@
 # HEAD OID there, writes a canned report to the -o file. Honors CODEX_STUB_REPORT
 # (path to a file whose contents become the report body) and CODEX_STUB_RC.
 set -euo pipefail
+echo "codex-args:$*" >> "${CODEX_LOG:-/dev/null}"
 wt=""; out=""
 while [[ $# -gt 0 ]]; do
   case "$1" in

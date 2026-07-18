@@ -65,6 +65,7 @@ Update (run BOTH):
 /i7aket:codex-check path/to/plan.md --ref <sha-or-rev>      # review against any commit-ish (preferred)
 /i7aket:codex-check path/to/plan.md --branch feat/ABC-123   # review against an explicit branch
 /i7aket:codex-check path/to/plan.md --pre-implementation    # review against the base ref, on purpose
+/i7aket:codex-check path/to/plan.md --model gpt-5.6-sol     # pin the Codex model (else ~/.codex config)
 /i7aket:codex-check path/to/plan.md                         # target from the plan's Ticket: line
 ```
 

@@ -46,5 +46,5 @@ The script exits with a clear `[codex-check] ERROR: ...` message and cleans up t
 
 # Notes
 - Web search in `codex exec` is enabled via `-c web_search='"live"'` (there is NO `--search` flag). The report is captured via `-o/--output-last-message`. These details are already in the script.
-- The reviewer reasoning effort is forced to `xhigh`; the model is whatever the user's Codex config (`~/.codex/config.toml`) selects.
+- The reviewer reasoning effort is forced to `xhigh`; the model is whatever the user's Codex config (`~/.codex/config.toml`) selects, unless pinned with `--model <name>` (or env `CODEX_CHECK_MODEL`), which is passed through as `codex exec -m`.
 - Ticket reading requires an issue-tracker MCP (Jira/Linear/YouTrack/etc.) configured for Codex; PR context requires `gh`. Both are optional — without them, Codex notes what's missing and reviews the plan against the branch diff anyway.

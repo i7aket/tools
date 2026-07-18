@@ -33,3 +33,4 @@ make_repo() {
 
 codex_ran()    { grep -q '^codex-invoked' "$CODEX_LOG"; }
 codex_oid()    { sed -n 's/^codex-invoked oid=//p' "$CODEX_LOG" | tail -n1; }
+codex_args()   { sed -n 's/^codex-args://p' "$CODEX_LOG" | tail -n1; }

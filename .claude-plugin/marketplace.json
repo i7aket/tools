@@ -11,7 +11,7 @@
       "name": "i7aket",
       "source": "./i7aket",
       "description": "Independent Codex review of your implementation plan (branch + ticket + PR), in an isolated git worktree. Command: /i7aket:codex-check",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "license": "MIT",
       "keywords": ["codex", "code-review", "plan-review"]
     }
