@@ -7,7 +7,7 @@
 # The report is captured via `codex exec -o`. The worktree is always removed
 # (trap EXIT). Works in any git repo; nothing here is project-specific.
 #
-# Usage: run.sh [PLAN_PATH] [--ref <rev> | --branch <name>] [--pre-implementation]
+# Usage: run.sh [PLAN_PATH] [--ref <rev> | --branch <name>] [--model <name>] [--pre-implementation]
 #   PLAN_PATH optional. If omitted, the newest candidate is auto-detected from
 #   common plan/spec locations (see locate step). Override search dirs with
 #   CODEX_CHECK_PLAN_DIRS (colon-separated).
@@ -15,6 +15,8 @@
 #   tag, detached PR head, origin/pr/*, or branch — resolved to an OID. Highest
 #   priority; the safest choice in a many-worktree repo.
 #   --branch <name> (or env CODEX_CHECK_BRANCH) reviews against that exact branch.
+#   --model <name> (or env CODEX_CHECK_MODEL) pins the Codex model (passed as
+#   `codex exec -m`). Unset -> whatever the user's ~/.codex/config.toml selects.
 #   --pre-implementation explicitly reviews the plan against the base ref with no
 #   target branch (otherwise "no branch for the ticket" is a hard error, not a
 #   silent base review).
@@ -57,6 +59,7 @@ cd "$REPO_ROOT"
 PLAN_PATH=""; PLAN_SET=0
 REQ_REF="${CODEX_CHECK_REF:-}"         # env default; --ref overrides. Highest priority.
 REQ_BRANCH="${CODEX_CHECK_BRANCH:-}"   # env default; --branch overrides
+REQ_MODEL="${CODEX_CHECK_MODEL:-}"     # env default; --model overrides. Unset -> Codex config default.
 PRE_IMPL=0
 set_plan() { [[ "$PLAN_SET" -eq 0 ]] && { PLAN_PATH="$1"; PLAN_SET=1; } || die "unexpected extra argument: $1"; }
 END_OPTS=0
@@ -67,6 +70,8 @@ while [[ $# -gt 0 ]]; do
     --ref=*)             REQ_REF="${1#--ref=}" ;;
     --branch)            shift; [[ $# -gt 0 ]] || die "--branch requires a value"; REQ_BRANCH="$1" ;;
     --branch=*)          REQ_BRANCH="${1#--branch=}" ;;
+    --model)             shift; [[ $# -gt 0 ]] || die "--model requires a value"; REQ_MODEL="$1" ;;
+    --model=*)           REQ_MODEL="${1#--model=}" ;;
     --pre-implementation) PRE_IMPL=1 ;;
     --)         END_OPTS=1 ;;                                 # everything after is positional
     -*)         die "unknown option: $1" ;;
@@ -442,10 +447,14 @@ GATE=REWORK
 EOF
 
 # --- 7. Run Codex -----------------------------------------------------------
-log "running codex exec (xhigh, web_search, workspace-write) ..."
+# Model: pinned via --model/CODEX_CHECK_MODEL, else Codex's own config default.
+MODEL_ARGS=()
+if [[ -n "$REQ_MODEL" ]]; then MODEL_ARGS=(-m "$REQ_MODEL"); fi
+log "running codex exec (model ${REQ_MODEL:-from ~/.codex config}, xhigh, web_search, workspace-write) ..."
 set +e
 codex exec \
   -C "$WT" \
+  ${MODEL_ARGS[@]+"${MODEL_ARGS[@]}"} \
   -s workspace-write \
   -c model_reasoning_effort='"xhigh"' \
   -c web_search='"live"' \

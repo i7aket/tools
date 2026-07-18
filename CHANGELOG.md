@@ -4,6 +4,15 @@ All notable changes to this plugin are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] — 2026-07-18
+
+### Added
+- `--model <name>` / env `CODEX_CHECK_MODEL` — pin the Codex model for the
+  review (passed through as `codex exec -m`; flag overrides env). Unset keeps
+  the previous behavior: whatever `~/.codex/config.toml` selects. The
+  "running codex exec" progress line now names the effective model source.
+  Covered by `test/model_selection.bats` (default/flag/env/override/fail-closed).
+
 ## [1.3.0] — 2026-06-27
 
 ### Added
